@@ -11,9 +11,15 @@ class Playlist(db.Model):
     # ADD THE NECESSARY CODE HERE
     __tablename__ = "playlists"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=False)
+
+    songs = db.relationship(
+        'Song', secondary='playlists_songs', backref='playlists')
+
+    def __repr__(self):
+        return f"<Playlist {self.name}>"
 
 
 class Song(db.Model):
@@ -22,9 +28,12 @@ class Song(db.Model):
     # ADD THE NECESSARY CODE HERE
     __tablename__ = "songs"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.Text, nullable=False)
     artist = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f"<Song {self.title} - {self.artist}>"
 
 
 class PlaylistSong(db.Model):
@@ -33,9 +42,9 @@ class PlaylistSong(db.Model):
     # ADD THE NECESSARY CODE HERE
     __tablename__ = "playlists_songs"
 
-    id = db.Column(db.Integer, primary_key=True)
-    playlist_id = db.Column(db.Text, nullable=False)
-    song_id = db.Column(db.Text, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    playlist_id = db.Column(db.Integer, db.ForeignKey("playlists.id"))
+    song_id = db.Column(db.Integer, db.ForeignKey("songs.id"))
 
 
 # DO NOT MODIFY THIS FUNCTION
